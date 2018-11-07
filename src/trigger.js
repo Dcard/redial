@@ -1,33 +1,30 @@
 import propName from './propName';
 
-export default (name, components, locals) => {
-  const promises = (Array.isArray(components) ? components : [components])
+export default (name, components, locals) => Promise.all((Array.isArray(components) ? components : [components])
 
-    // Filter out falsy components
-    .filter(component => component)
+  // Filter out falsy components
+  .filter(component => component)
 
-    // Get component lifecycle hooks
-    .map(component => ({ component, hooks: component[propName] }))
+  // Get component lifecycle hooks
+  .map(component => ({ component, hooks: component[propName] }))
 
-    // Filter out components that haven't been decorated
-    .filter(({ hooks }) => hooks)
+  // Filter out components that haven't been decorated
+  // or has not the hook of the same name
+  .filter(({ hooks }) => hooks && typeof hooks[name] === 'function')
 
-    // Calculate locals if required, execute hooks and store promises
-    .map(({ component, hooks }) => {
-      const hook = hooks[name];
+  // Calculate locals if required, execute hooks and store promises
+  .reduce((promises, { component, hooks }) => {
+    return promises.concat(execute());
 
-      if (typeof hook !== 'function') {
-        return;
-      }
-
+    function execute() {
       try {
-        return typeof locals === 'function' ?
-          hook(locals(component)) :
-          hook(locals);
+        return hooks[name](getLocals(), promises);
       } catch (err) {
         return Promise.reject(err);
       }
-    });
+    }
 
-  return Promise.all(promises);
-};
+    function getLocals() {
+      return typeof locals === 'function' ? locals(component) : locals
+    }
+  }, []));

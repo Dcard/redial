@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/markdalgleish/redial.git"
+    "url": "git+ssh://git@github.com/Dcard/redial.git"
   },
   "author": "Mark Dalgleish",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/markdalgleish/redial/issues"
+    "url": "https://github.com/Dcard/redial/issues"
   },
-  "homepage": "https://github.com/markdalgleish/redial#readme",
+  "homepage": "https://github.com/Dcard/redial#readme",
   "devDependencies": {
     "babel": "^5.8.23",
     "babel-istanbul": "^0.3.20",
